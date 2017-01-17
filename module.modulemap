@@ -3,3 +3,9 @@ module CSQLite [system] {
     link "sqlite3"
     export *
 }
+
+module CSQLiteLinux [system] {
+    header "/usr/include/sqlite3.h"
+    link "sqlite3"
+    export *
+}
