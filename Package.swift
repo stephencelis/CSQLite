@@ -1,8 +1,7 @@
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
     name: "CSQLite",
-    providers: [
-        .Apt("libsqlite3-dev")
-    ]
+    providers: [.apt(["libsqlite3-dev"])]
 )
