@@ -1,17 +1,23 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 import PackageDescription
 
 let package = Package(
   name: "swift-toolchain-sqlite",
   products: [
+    /*
     .executable(
       name: "sqlite",
       targets: ["sqlite"]),
+     */
     .library(
-      name: "SwiftToolchainCSQLite",
-      targets: ["SwiftToolchainCSQLite"]),
+      name: "SQLiteSwiftCSQLite",
+      targets: ["SQLiteSwiftCSQLite"]),
+  ],
+  traits: [
+    .trait(name: "FTS5", description: "Enables FTS5"),
   ],
   targets: [
+    /*
     .executableTarget(
       name: "sqlite",
       dependencies: ["SwiftToolchainCSQLite"],
@@ -34,10 +40,12 @@ let package = Package(
         .linkedLibrary("pthread", .when(platforms: [.linux, .custom("freebsd")])),
       ]
     ),
+    */
     .target(
-      name: "SwiftToolchainCSQLite",
+      name: "SQLiteSwiftCSQLite",
       path: "Sources/CSQLite",
-      publicHeadersPath: "include"
+      publicHeadersPath: "include",
+      cSettings: [.define("SQLITE_ENABLE_FTS5", .when(traits: ["FTS5"]))]
     ),
   ]
 )
