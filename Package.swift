@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "swift-toolchain-sqlite",
+  name: "sqlite-swift-swift-toolchain-sqlite",
   products: [
     /*
     .executable(
