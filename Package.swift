@@ -4,11 +4,6 @@ import PackageDescription
 let package = Package(
   name: "sqlite-swift-swift-toolchain-sqlite",
   products: [
-    /*
-    .executable(
-      name: "sqlite",
-      targets: ["sqlite"]),
-     */
     .library(
       name: "SQLiteSwiftCSQLite",
       targets: ["SQLiteSwiftCSQLite"]),
@@ -17,30 +12,6 @@ let package = Package(
     .trait(name: "FTS5", description: "Enables FTS5"),
   ],
   targets: [
-    /*
-    .executableTarget(
-      name: "sqlite",
-      dependencies: ["SwiftToolchainCSQLite"],
-      cSettings: [
-        .define("SQLITE_OMIT_LOAD_EXTENSION"),
-        .define(
-          "SQLITE_NOHAVE_SYSTEM",
-          .when(platforms: [.macCatalyst, .iOS, .tvOS, .watchOS, .visionOS, .wasi])),
-        .define("HAVE_READLINE", .when(platforms: [.macOS, .macCatalyst])),
-        .define("_WASI_EMULATED_SIGNAL", .when(platforms: [.wasi])),
-        .define("_WASI_EMULATED_PROCESS_CLOCKS", .when(platforms: [.wasi])),
-        .define("_WASI_EMULATED_GETPID", .when(platforms: [.wasi])),
-      ],
-      linkerSettings: [
-        .linkedLibrary("wasi-emulated-signal", .when(platforms: [.wasi])),
-        .linkedLibrary("wasi-emulated-process-clocks", .when(platforms: [.wasi])),
-        .linkedLibrary("wasi-emulated-getpid", .when(platforms: [.wasi])),
-        .linkedLibrary("dl", .when(platforms: [.linux])),
-        .linkedLibrary("m", .when(platforms: [.linux, .android, .custom("freebsd"), .openbsd])),
-        .linkedLibrary("pthread", .when(platforms: [.linux, .custom("freebsd"), .openbsd])),
-      ]
-    ),
-    */
     .target(
       name: "SQLiteSwiftCSQLite",
       path: "Sources/CSQLite",
@@ -49,28 +20,3 @@ let package = Package(
     ),
   ]
 )
-
-// Workaround for: undefined symbol: swift_addNewDSOImage
-// (this should be resolved by Swift Build becoming the default build system)
-if Context.environment["GITHUB_JOB"] != "embedded-wasm-sdk-build" {
-  for target in package.targets {
-    if target.name == "SwiftToolchainCSQLite" {
-      target.linkerSettings = [
-        .linkedLibrary("swiftCore", .when(platforms: [.windows, .wasi]))
-      ]
-    }
-  }
-}
-
-// Build the library as a dylib in CI to ensure it specifies all necessary linkages
-if Context.environment["CI"] == "true"
-  && Context.environment["GITHUB_JOB"] != "wasm-sdk-build"
-  && Context.environment["GITHUB_JOB"] != "embedded-wasm-sdk-build"
-{
-  package.products += [
-    .library(
-      name: "SwiftToolchainCSQLiteDynamic",
-      type: .dynamic,
-      targets: ["SwiftToolchainCSQLite"])
-  ]
-}
