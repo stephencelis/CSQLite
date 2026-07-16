@@ -10,13 +10,17 @@ let package = Package(
   ],
   traits: [
     .trait(name: "FTS5", description: "Enables FTS5"),
+    .trait(name: "RTree", description: "Enables R*Tree"),
   ],
   targets: [
     .target(
       name: "SQLiteSwiftCSQLite",
       path: "Sources/CSQLite",
       publicHeadersPath: "include",
-      cSettings: [.define("SQLITE_ENABLE_FTS5", .when(traits: ["FTS5"]))]
+      cSettings: [
+        .define("SQLITE_ENABLE_FTS5", .when(traits: ["FTS5"])),
+        .define("SQLITE_ENABLE_RTREE", .when(traits: ["RTree"])),
+      ]
     ),
   ]
 )
